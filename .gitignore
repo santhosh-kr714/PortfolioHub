@@ -1,0 +1,36 @@
+# Environment files
+.env
+backend/.env
+frontend/.env
+*.env
+
+# Dependencies
+node_modules/
+backend/venv/
+venv/
+
+# Build outputs
+dist/
+build/
+out/
+
+# Python cache and byte-code
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+
+# Databases
+*.db
+*.sqlite
+
+# Editors and IDEs
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
