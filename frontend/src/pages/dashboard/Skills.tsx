@@ -154,12 +154,12 @@ export default function Skills() {
         </div>
       ) : (
         <div className="space-y-8">
-          {Object.entries(groupedSkills).map(([category, catSkills]) => (
+          {(Object.entries(groupedSkills) as [string, any[]][]).map(([category, catSkills]) => (
             <div key={category} className="bg-white/5 border border-white/10 rounded-2xl p-6">
               <h3 className="text-lg font-bold text-white mb-4 border-b border-white/10 pb-2">{category}</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                 <AnimatePresence>
-                  {catSkills.map((skill) => (
+                  {catSkills.map((skill: any) => (
                     <motion.div
                       key={skill.id}
                       layout
