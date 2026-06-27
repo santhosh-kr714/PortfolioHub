@@ -75,14 +75,18 @@ def login(form_data: OAuth2PasswordRequestForm = Depends()):
             subject="mock-id-123", expires_delta=access_token_expires
         )
         return {"access_token": access_token, "token_type": "bearer"}
-
     user_resp = supabase.table("users").select("*").eq("email", form_data.username).execute()
     if not user_resp.data:
-        raise HTTPException(status_code=400, detail="Incorrect email or password")
+        raise HTTPException(status_code=400, detail="Invalid email or password")
         
     user = user_resp.data[0]
-    if not verify_password(form_data.password, user["password_hash"]):
-        raise HTTPException(status_code=400, detail="Incorrect email or password")
+    try:
+        is_valid = verify_password(form_data.password, user["password_hash"])
+    except Exception:
+        is_valid = False
+
+    if not is_valid:
+        raise HTTPException(status_code=400, detail="Invalid email or password")
         
     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(

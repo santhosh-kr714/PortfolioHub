@@ -12,3 +12,4 @@ alembic
 supabase
 psycopg2-binary
 pydantic-settings
+argon2-cffi

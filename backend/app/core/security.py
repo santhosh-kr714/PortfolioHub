@@ -4,10 +4,18 @@ from jose import jwt
 from passlib.context import CryptContext
 from app.core.config import settings
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+pwd_context = CryptContext(schemes=["argon2", "bcrypt"], deprecated="auto")
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return pwd_context.verify(plain_password, hashed_password)
+    try:
+        # If the hash is bcrypt, we safely truncate to 72 bytes to prevent ValueError
+        is_bcrypt = hashed_password.startswith(("$2a$", "$2b$", "$2y$"))
+        password_to_verify = plain_password
+        if is_bcrypt:
+            password_to_verify = plain_password.encode('utf-8')[:72].decode('utf-8', errors='ignore')
+        return pwd_context.verify(password_to_verify, hashed_password)
+    except Exception:
+        return False
 
 def get_password_hash(password: str) -> str:
     return pwd_context.hash(password)
