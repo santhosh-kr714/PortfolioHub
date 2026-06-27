@@ -11,12 +11,19 @@ oauth2_scheme = OAuth2PasswordBearer(
 )
 
 def get_current_user(token: str = Depends(oauth2_scheme)) -> UserResponse:
+    print("========== DEPS: GET CURRENT USER ==========")
+    print("TOKEN:", token)
+    print("SECRET_KEY:", settings.SECRET_KEY)
+    print("ALGORITHM:", settings.ALGORITHM)
     try:
         payload = jwt.decode(
             token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]
         )
+        print("DECODED PAYLOAD:", payload)
         token_data = TokenPayload(**payload)
-    except (JWTError, ValidationError):
+        print("TOKEN DATA:", token_data)
+    except Exception as e:
+        print("JWT DECODE OR VALIDATION ERROR:", str(e))
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Could not validate credentials",
